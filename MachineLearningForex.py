@@ -9,14 +9,19 @@ date,bid,ask= np.loadtxt('./Data/GBPUSD1d.txt',unpack=True,
 								delimiter=',',
 								converters={ 0:mdates.strpdate2num('%Y%m%d%H%M%S')})
 
-def percentChange(startPoint, currentPoint):
-	return ((float(currentPoint)-startPoint)/startPoint)*100.00
+patternAr = []
+performanceAr = []
 
-def patternFinder():
+def percentChange(startPoint, currentPoint):
+	return ((float(currentPoint)-startPoint)/abs(startPoint))*100.00
+
+def patternStorage():
+	patStartTime= time.time()
 	avgLine=((bid+ask)/2)-30 
 	x = len(avgLine)
 	y=11
 	while y< x:
+		pattern = []
 		p1 = percentChange(avgLine[y-10],avgLine[y-9])
 		p2 = percentChange(avgLine[y-10],avgLine[y-8])
 		p3 = percentChange(avgLine[y-10],avgLine[y-7])
@@ -30,13 +35,36 @@ def patternFinder():
 
 		outcomeRange = avgLine[y+20:y+30]
 		currentPoint = avgLine[y]
-		print reduce(lambda x, y: x+y, outcomeRange)/ len(outcomeRange)
-		print currentPoint
+		try: 
+			avgOutcome = reduce(lambda x, y: x+y, outcomeRange)/ len(outcomeRange)
+		except Exception, e:
+			print str(e)
+			avgOutcome = 0
+
+		futureOutcome = percentChange(currentPoint, avgOutcome)
+		pattern.append(p1)
+		pattern.append(p2)
+		pattern.append(p3)
+		pattern.append(p4)
+		pattern.append(p5)
+		pattern.append(p6)
+		pattern.append(p7)
+		pattern.append(p8)
+		pattern.append(p9)
+		pattern.append(p10)
+		patternAr.append(pattern)
+		performanceAr.append(futureOutcome)
+
+		'''print currentPoint
 		print '__________'
-		print p1, p2, p3, p4, p5, p6, p7, p8, p9, p10
+		print p1, p2, p3, p4, p5, p6, p7, p8, p9, p10'''
+
 		y+=1
 
-		time.sleep(555)
+		patEndTime = time.time()
+		print len(patternAr)
+		print len(performanceAr)
+		print 'Pattern store time took:', patEndTime - patStartTime, 'seconds'
 
 
 
@@ -57,4 +85,4 @@ def graphRawFX():
 	plt.grid(True)
 	plt.show()
 graphRawFX()
-patternFinder()
+patternStorage()
