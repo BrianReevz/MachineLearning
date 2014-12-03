@@ -5,13 +5,17 @@ import matplotlib.dates as mdates
 import numpy as np
 import time
 
+
+totalStart = time.time()
 date,bid,ask= np.loadtxt('./Data/GBPUSD1d.txt',unpack=True,
 								delimiter=',',
 								converters={ 0:mdates.strpdate2num('%Y%m%d%H%M%S')})
 
+avgLine=((bid+ask)/2)-30 
+
 patternAr = []
 performanceAr = []
-avgLine=((bid+ask)/2)-30 
+patForRec = []
 
 
 def percentChange(startPoint, currentPoint):
@@ -68,8 +72,8 @@ def patternStorage():
 		print len(performanceAr)
 		print 'Pattern store time took:', patEndTime - patStartTime, 'seconds'
 
-def patternRecognition():
-	patForRec = []
+def currentPattern():
+	
 
 	cp1 = percentChange(avgLine[-11],avgLine[-10])
 	cp2 = percentChange(avgLine[-11],avgLine[-9])
@@ -81,7 +85,7 @@ def patternRecognition():
 	cp8 = percentChange(avgLine[-11],avgLine[-3])
 	cp9 = percentChange(avgLine[-11],avgLine[-2])
 	cp10 = percentChange(avgLine[-11],avgLine[-1])
-## fix this junk up. make into for loop bruh
+	## fix this junk up. make into for loop bruh
 	patForRec.append(cp1)
 	patForRec.append(cp2)
 	patForRec.append(cp3)
@@ -94,6 +98,40 @@ def patternRecognition():
 	patForRec.append(cp10)
 
 	print patForRec
+
+def patternRecongnition():
+	for eachPattern in patternAr:
+		sim1 = 100.00 - abs(percentChange(eachPattern[0], patForRec[0]))
+		sim2 = 100.00 - abs(percentChange(eachPattern[1], patForRec[1]))
+		sim3 = 100.00 - abs(percentChange(eachPattern[2], patForRec[2]))
+		sim4 = 100.00 - abs(percentChange(eachPattern[3], patForRec[3]))
+		sim5 = 100.00 - abs(percentChange(eachPattern[4], patForRec[4]))
+		sim6 = 100.00 - abs(percentChange(eachPattern[5], patForRec[5]))
+		sim7 = 100.00 - abs(percentChange(eachPattern[6], patForRec[6]))
+		sim8 = 100.00 - abs(percentChange(eachPattern[7], patForRec[7]))
+		sim9 = 100.00 - abs(percentChange(eachPattern[8], patForRec[8]))
+		sim10 = 100.00 - abs(percentChange(eachPattern[9], patForRec[9]))
+
+		howSim = (sim1+sim2+sim3+sim4+sim4+sim5+sim6+sim7+sim8+sim9+sim10)/10.00
+
+		if howSim > 70:
+			patdex = patternAr.index(eachPattern)
+			
+			print'############################################'
+			print'############################################'
+			print patForRec
+			print '==========================================='
+			print '==========================================='
+			print eachPattern
+			print '-------------------------------------------'
+			print 'predicted outcome:', performanceAr[patdex]
+			xp = [1,2,3,4,5,6,7,8,9,10]
+			fig = plt.figure()
+			plt.plot(xp, patForRec)
+			plt.plot(xp, eachPattern)
+			plt.show()
+			print'############################################'
+			print'############################################'
 
 def graphRawFX():
 	
@@ -114,6 +152,9 @@ def graphRawFX():
 
 ####
 ###Testing Main 	
-graphRawFX()
+##graphRawFX()
 patternStorage()
-patternRecognition()
+currentPattern()
+patternRecongnition()
+totalTime = time.time() - totalStart
+print 'processing time took', totalTime, 'seconds'
