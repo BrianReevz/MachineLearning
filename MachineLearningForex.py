@@ -11,11 +11,11 @@ date,bid,ask= np.loadtxt('./Data/GBPUSD1d.txt',unpack=True,
 								delimiter=',',
 								converters={ 0:mdates.strpdate2num('%Y%m%d%H%M%S')})
 
-avgLine=((bid+ask)/2)-30 
+#avgLine=((bid+ask)/2)-30 
 
-patternAr = []
-performanceAr = []
-patForRec = []
+#patternAr = []
+#performanceAr = []
+#patForRec = []
 
 
 def percentChange(startPoint, currentPoint):
@@ -275,8 +275,23 @@ def graphRawFX():
 ####
 ###Testing Main 	
 ##graphRawFX()
-patternStorage()
-currentPattern()
-patternRecongnition()
-totalTime = time.time() - totalStart
-print 'processing time took', totalTime, 'seconds'
+dataLength = int(bid.shape[0])
+print 'dataLength is:', dataLength
+
+toWhat = 100
+while toWhat < dataLength:
+
+	avgLine=((bid+ask)/2)
+	avgLine = avgLine[:toWhat]
+
+	patternAr = []
+	performanceAr = []
+	patForRec = []
+
+	patternStorage()
+	currentPattern()
+	patternRecongnition()
+	totalTime = time.time() - totalStart
+	print 'processing time took', totalTime, 'seconds'
+	moveOn = raw_input('press enter to move on ...')
+	toWhat +=1
