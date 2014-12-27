@@ -198,6 +198,10 @@ def currentPattern():
 	print patForRec
 
 def patternRecongnition():
+
+	patFound = 0 #init Pattern faound indicator
+	plotPatAr=[]
+
 	for eachPattern in patternAr:
 		sim1 = 100.00 - abs(percentChange(eachPattern[0], patForRec[0]))
 		sim2 = 100.00 - abs(percentChange(eachPattern[1], patForRec[1]))
@@ -236,24 +240,36 @@ def patternRecongnition():
 				sim11+sim12+sim13+sim14+sim15+sim16+sim17+sim18+sim19+sim20+
 				sim21+sim22+sim23+sim24+sim25+sim26+sim27+sim28+sim29+sim30)/30.00
 
-		if howSim > 40:
+		if howSim > 75:
 			patdex = patternAr.index(eachPattern)
+
+			patFound = 1
 			
-			print'############################################'
-			print'############################################'
-			print patForRec
-			print '==========================================='
-			print '==========================================='
-			print eachPattern
-			print '-------------------------------------------'
-			print 'predicted outcome:', performanceAr[patdex]
-			xp = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
-			fig = plt.figure()
-			plt.plot(xp, patForRec)
-			plt.plot(xp, eachPattern)
-			plt.show()
-			print'############################################'
-			print'############################################'
+			# print'############################################'
+			# print'############################################'
+			# print patForRec
+			# print '==========================================='
+			# print '==========================================='
+			# print eachPattern
+			# print '-------------------------------------------'
+			# print 'predicted outcome:', performanceAr[patdex]
+			# way easier way to plot points 1 to 30
+			#xp = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+			xp = range(1,31)
+			plotPatAr.append(eachPattern)
+	if patFound ==1:
+
+		fig = plt.figure(figsize=(10,7))
+		for eachPatt in plotPatAr:
+			plt.plot(xp, eachPatt)
+
+		plt.plot(xp, patForRec,'#54fff7',linewidth=3) #original pattern for rec. will make easy to see
+		plt.grid(True)
+		plt.title('Pattern Recognition')
+		
+		plt.show()
+			#print'############################################'
+			#print'############################################'
 
 def graphRawFX():
 	
@@ -278,7 +294,7 @@ def graphRawFX():
 dataLength = int(bid.shape[0])
 print 'dataLength is:', dataLength
 
-toWhat = 100
+toWhat = 3700
 while toWhat < dataLength:
 
 	avgLine=((bid+ask)/2)
