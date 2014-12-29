@@ -261,7 +261,14 @@ def patternRecongnition():
 
 		fig = plt.figure(figsize=(10,7))
 		for eachPatt in plotPatAr:
+			futurePoints = patternAr.index(eachPatt)
+			if performanceAr[futurePoints] > patForRec[29]:
+				pcolor = '#24bc00' # color points greed if the prediction is good
+			else:
+				pcolor = '#d40000'
+
 			plt.plot(xp, eachPatt)
+			plt.scatter(35,performanceAr[futurePoints], c =pcolor, alpha=.3)  #alpha will show darker colors when they stack
 
 		plt.plot(xp, patForRec,'#54fff7',linewidth=3) #original pattern for rec. will make easy to see
 		plt.grid(True)
@@ -294,7 +301,7 @@ def graphRawFX():
 dataLength = int(bid.shape[0])
 print 'dataLength is:', dataLength
 
-toWhat = 3700
+toWhat = 3700 #manual break window
 while toWhat < dataLength:
 
 	avgLine=((bid+ask)/2)
