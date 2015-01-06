@@ -270,6 +270,12 @@ def patternRecongnition():
 			plt.plot(xp, eachPatt)
 			plt.scatter(35,performanceAr[futurePoints], c =pcolor, alpha=.3)  #alpha will show darker colors when they stack
 
+		realOutcomeRange  = allData[toWhat+20 : toWhat+30]
+		realAvgOutcome = reduce(lambda x, y: x+y, realOutcomeRange)/ len(realOutcomeRange)
+		realMovement = percentChange(allData[toWhat],realAvgOutcome)
+
+		plt.scatter(40, realMovement,c='#54fff7',s=25) #so the realMovement is not on top of everything we put it on x of 40
+
 		plt.plot(xp, patForRec,'#54fff7',linewidth=3) #original pattern for rec. will make easy to see
 		plt.grid(True)
 		plt.title('Pattern Recognition')
@@ -302,10 +308,11 @@ dataLength = int(bid.shape[0])
 print 'dataLength is:', dataLength
 
 toWhat = 3700 #manual break window
+allData = ((bid+ask)/2) 
 while toWhat < dataLength:
 
 	avgLine=((bid+ask)/2)
-	avgLine = avgLine[:toWhat]
+	avgLine = allData[:toWhat]
 
 	patternAr = []
 	performanceAr = []
